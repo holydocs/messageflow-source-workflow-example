@@ -21,12 +21,6 @@ channels:
       CampaignExecute:
         $ref: '#/components/messages/CampaignExecute'
 
-  campaign.status:
-    address: campaign.status
-    messages:
-      CampaignStatusUpdate:
-        $ref: '#/components/messages/CampaignStatusUpdate'
-
   user.info.request:
     address: user.info.request
     parameters:
@@ -69,14 +63,6 @@ operations:
     summary: Receive a request to execute a notification campaign
     messages:
       - $ref: '#/channels/campaign.execute/messages/CampaignExecute'
-
-  sendCampaignStatus:
-    action: send
-    channel:
-      $ref: '#/channels/campaign.status'
-    summary: Send campaign status updates
-    messages:
-      - $ref: '#/channels/campaign.status/messages/CampaignStatusUpdate'
 
   requestUserInfo:
     action: send
@@ -187,67 +173,6 @@ components:
           - execution_id
           - campaign_id
           - execution_type
-
-    CampaignStatusUpdate:
-      name: CampaignStatusUpdate
-      title: Campaign Status Update Message
-      summary: Message for updating campaign execution status
-      contentType: application/json
-      payload:
-        type: object
-        properties:
-          execution_id:
-            type: string
-            format: uuid
-            description: ID of the campaign execution
-          campaign_id:
-            type: string
-            format: uuid
-            description: ID of the campaign
-          status:
-            type: string
-            enum: [pending, running, completed, failed, paused, cancelled]
-            description: Current status of the campaign execution
-          progress:
-            type: object
-            properties:
-              total_targets:
-                type: integer
-                description: Total number of users targeted
-              sent:
-                type: integer
-                description: Number of notifications sent
-              failed:
-                type: integer
-                description: Number of notifications that failed
-              success_rate:
-                type: number
-                format: float
-                minimum: 0
-                maximum: 1
-                description: Success rate as a percentage
-            required:
-              - total_targets
-              - sent
-              - failed
-          error:
-            type: object
-            properties:
-              code:
-                type: string
-                description: Error code
-              message:
-                type: string
-                description: Error message
-          updated_at:
-            type: string
-            format: date-time
-            description: When the status was updated
-        required:
-          - execution_id
-          - campaign_id
-          - status
-          - updated_at
 
     UserInfoRequest:
       name: UserInfoRequest
